@@ -137,6 +137,12 @@ hasTruncated = new EventEmitter(); -- \$event to true if truncation happen (ever
 
 ## Update
 
+### 2024
+- 11-14 for lib version 2.0.1 I started over from the original because nothing was importing
+  seems to be working in angular 17
+- 11-13 For lib version 1.11.0 should support peer dependency Angular ~17
+- 02-27 For lib version 1.10.0 should support peer dependency Angular ~16 (forked because I was unable to contact the author)
+
 ### 2022
 - 06-06 For lib version v1.9.1 now support peer dependency Angular ~14
 - 05-25 For lib version v1.8.1 now support peer dependency Angular ~13

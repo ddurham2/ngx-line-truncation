@@ -9,22 +9,22 @@ import {
   Renderer2,
   OnDestroy,
   HostListener
-} from "@angular/core";
-import { getContentHeight, getLineHeight, truncate } from "line-truncation";
-import { Subject, Subscription, BehaviorSubject } from "rxjs";
-import { debounceTime, skip } from "rxjs/operators";
+} from '@angular/core';
+import { getContentHeight, getLineHeight, truncate } from 'line-truncation';
+import { Subject, Subscription, BehaviorSubject } from 'rxjs';
+import { debounceTime, skip } from 'rxjs/operators';
 
 /**
  * This Directive allows you to specify the number of lines that you want to truncate a text by.
  *
  * @example
  * <!-- with <p> -->
- *   <p [innerHTML]="description"
- *      [line-truncation]="5"
- *      (hasTruncated)="onTruncationFinish(e)">
+ *   <p [innerHTML]='description'
+ *      [line-truncation]='5'
+ *      (hasTruncated)='onTruncationFinish(e)'>
  *   </p>
  * <!-- with div -->
- *  <div [line-truncation]="5">your text</div>
+ *  <div [line-truncation]='5'>your text</div>
  *
  */
 
@@ -33,16 +33,16 @@ interface Options {
 }
 
 @Directive({
-  selector: "[line-truncation]",
-  exportAs: "lineTruncation"
+  selector: '[line-truncation]',
+  exportAs: 'lineTruncation'
 })
 export class LineTruncationDirective
   implements AfterViewInit, OnInit, OnDestroy {
-  @Input("line-truncation")
+  @Input('line-truncation')
   lines = 1;
 
   @Input()
-  options: Options = { ellipsis: "\u2026" };
+  options: Options = { ellipsis: '\u2026' };
 
   @Input() set disabled(val: boolean) {
     this._disabled$.next(val);
@@ -58,19 +58,24 @@ export class LineTruncationDirective
   MAX_TRIES = 10;
   observerFlag = true;
 
+  // tslint:disable-next-line:variable-name
   _disabled$ = new BehaviorSubject<boolean>(false);
-  element = this.elementRef.nativeElement;
+  element: any;
   windowResize$ = new Subject<Event>();
   windowListener: Subscription;
   mutationObserver: MutationObserver;
   isTruncated: boolean;
 
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   handleClick(event: Event) {
     this.windowResize$.next(event);
   }
 
-  constructor(private elementRef: ElementRef<HTMLElement>, private renderer: Renderer2) {}
+  constructor(private elementRef: ElementRef<HTMLElement>, private renderer: Renderer2) {
+    if (this.elementRef) {
+      this.element = this.elementRef.nativeElement;
+    }
+  }
   /**
    * Hide the original text content until we've finished the truncation
    */
@@ -84,7 +89,7 @@ export class LineTruncationDirective
       if (disable) {
         // shut down listener, observer
         this.disconnectMutationObserver();
-        this.disconnectWindowLisener();
+        this.disconnectWindowListener();
       } else {
         // re-register
         this.truncationInit();
@@ -107,7 +112,7 @@ export class LineTruncationDirective
     tries: number = 1,
     maxTries = this.MAX_TRIES
   ) {
-    if (this._disabled$.getValue()) {
+    if (this._disabled$ && this._disabled$.getValue()) {
       return;
     }
     // backup original element before truncation
@@ -137,7 +142,8 @@ export class LineTruncationDirective
             this.handler(true);
           }
         } else {
-          // when there is no need, simply show the element, emit false and unsubscribe from MutationObserver if `watchChanges` prop was falsy
+          // when there is no need, simply show the element, emit false and unsubscribe from MutationObserver
+          // if `watchChanges` prop was falsy
           this.handler(false);
         }
       }
@@ -152,11 +158,15 @@ export class LineTruncationDirective
       this.observerFlag = false;
       this.disconnectMutationObserver();
     }
-    this.renderer.removeStyle(this.element, "visibility");
+    if (this.renderer) {
+      this.renderer.removeStyle(this.element, 'visibility');
+    }
   }
 
   truncationInit() {
-    this.renderer.setStyle(this.element, "visibility", "hidden");
+    if (this.renderer) {
+      this.renderer.setStyle(this.element, 'visibility', 'hidden');
+    }
     this.initWindowResizeListener(this.element);
     this.initMutationObserver(this.element);
   }
@@ -181,7 +191,7 @@ export class LineTruncationDirective
     this.windowListener = this.windowResize$
       .pipe(debounceTime(500))
       .subscribe(() => {
-        this.renderer.setStyle(element, "visibility", "hidden");
+        this.renderer.setStyle(element, 'visibility', 'hidden');
         this.putbackElement();
         this.truncateWhenNecessary(element);
       });
@@ -205,15 +215,17 @@ export class LineTruncationDirective
     }
   }
 
-  disconnectWindowLisener() {
+  disconnectWindowListener() {
     if (this.windowListener) {
       this.windowListener.unsubscribe();
     }
   }
 
   ngOnDestroy() {
+    if (this._disabled$) {
     this._disabled$.complete();
+    }
     this.disconnectMutationObserver();
-    this.disconnectWindowLisener();
+    this.disconnectWindowListener();
   }
 }

@@ -1,0 +1,42 @@
+# test files
+/tests/
+/*spec.ts
+/*test.ts
+
+# config files
+/karma.conf.js
+/protractor.conf.js
+/tsconfig.*
+/tslint.json
+
+# IDE specific files
+/.idea/
+/.vscode/
+
+# project specific files
+/dist/
+/node_modules/
+/temp/
+/log
+/yarn.lock
+
+# system files
+/.DS_Store
+/npm-debug.log
+/*.pid
+/*.seed
+/*.log
+/*.csv
+/*.dat
+/*.out
+/*.pid
+/*.gz
+
+# OS files
+/.MacOSX
+/._*
+
+# other files
+*.ts
+!*.d.ts
+README.md

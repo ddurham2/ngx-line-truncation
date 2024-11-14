@@ -1,0 +1,14 @@
+add to the string of or in peerDependencies
+"peerDependencies": {
+         "@angular/common": "^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0  || ^18.0.0",
+         "@angular/core": "^10.0.0 || ^11.0.0 || ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0  || ^18.0.0"
+       },
+
+load the desired node/npm version
+nvm use 18
+run the build script
+npm run build_lib
+if that works see if the npm pack is sane
+npm run package
+if that makes sense you can publish
+npm run publish
