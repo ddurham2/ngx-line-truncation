@@ -33,8 +33,9 @@ interface Options {
 }
 
 @Directive({
-  selector: '[line-truncation]',
-  exportAs: 'lineTruncation'
+    selector: '[line-truncation]',
+    exportAs: 'lineTruncation',
+    standalone: false
 })
 export class LineTruncationDirective
   implements AfterViewInit, OnInit, OnDestroy {
